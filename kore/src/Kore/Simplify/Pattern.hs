@@ -53,6 +53,8 @@ import Kore.Simplify.Simplify (
 import Kore.Substitute
 import qualified Logic
 import Prelude.Kore
+import Kore.Unparser (Unparse(unparse), unparseToText, unparseToString)
+import Data.List (intercalate, intersperse)
 
 -- | Simplifies the 'Pattern' and removes the exists quantifiers at the top.
 simplifyTopConfiguration ::
@@ -122,6 +124,7 @@ makeEvaluate sideCondition =
     loop . OrPattern.fromPattern
   where
     loop input = do
+        -- trace (("input: " ++) $ unlines $ map unparseToString $ OrPattern.toPatterns input) $ pure ()
         output <-
             OrPattern.traverse worker input
                 & fmap OrPattern.flatten
@@ -144,7 +147,7 @@ makeEvaluate sideCondition =
                 simplifyTerm termSideCondition term'
                     >>= Logic.scatter
             let simplifiedPattern =
-                    Conditional.andCondition simplifiedTerm simplifiedCondition
+                    Conditional.andCondition ({-trace ("simpl: " ++ unparseToString simplifiedTerm)-} simplifiedTerm) simplifiedCondition
             simplifyCondition sideCondition simplifiedPattern
 
 simplifyPatternId ::

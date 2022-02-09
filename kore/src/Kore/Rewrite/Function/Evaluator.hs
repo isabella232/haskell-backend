@@ -63,6 +63,10 @@ import Kore.Unparser
 import qualified Logic
 import Prelude.Kore
 import qualified Pretty
+import qualified Kore.Simplify.Pattern as Pattern
+import qualified Control.Lens as Lens
+import Data.Generics.Product (HasField(field))
+import qualified Kore.Internal.Conditional as Conditional
 
 -- | Evaluates functions on an application pattern.
 
@@ -271,7 +275,11 @@ maybeEvaluatePattern
             | toSimplify == unchangedPatt =
                 return (OrPattern.fromPattern unchangedPatt)
             | otherwise =
-                simplifyPattern sideCondition toSimplify
+                OrPattern.map (toSimplify *>)
+                  <$> simplifyTerm (SideCondition.top) (Conditional.term toSimplify)
+              -- return $ OrPattern.fromPattern toSimplify
+              -- Pattern.simplify toSimplify
+              -- simplifyPatternId sideCondition toSimplify
 
 evaluateSortInjection ::
     InternalVariable variable =>
