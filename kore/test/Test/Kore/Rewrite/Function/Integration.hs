@@ -989,9 +989,10 @@ test_Nat =
     ]
 
 test_NatUnification :: [TestTree]
-test_NatUnification = --[ equalsUnification "1 * 2 = 2 : Nat" (times one two) [two] ]
+test_NatUnification =
+    --[ equalsUnification "1 * 2 = 2 : Nat" (times one two) [two] ]
 
---foo =
+    --foo =
     [ matches
         "plus(0, N) matches plus(0, 1)"
         (plus zero varNConfig)

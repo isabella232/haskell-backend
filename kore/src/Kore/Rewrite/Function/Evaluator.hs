@@ -19,11 +19,14 @@ import Control.Error (
     maybeT,
     throwE,
  )
+import qualified Control.Lens as Lens
 import Control.Monad.Catch (
     MonadThrow,
  )
+import Data.Generics.Product (HasField (field))
 import qualified Kore.Attribute.Pattern.Simplified as Attribute.Simplified
 import Kore.Attribute.Synthetic
+import qualified Kore.Internal.Conditional as Conditional
 import qualified Kore.Internal.MultiOr as MultiOr (
     flatten,
     merge,
@@ -54,6 +57,7 @@ import qualified Kore.Rewrite.Function.Memo as Memo
 import Kore.Rewrite.RewritingVariable (
     RewritingVariableName,
  )
+import qualified Kore.Simplify.Pattern as Pattern
 import Kore.Simplify.Simplify as AttemptedAxiom (
     AttemptedAxiom (..),
  )
@@ -63,10 +67,6 @@ import Kore.Unparser
 import qualified Logic
 import Prelude.Kore
 import qualified Pretty
-import qualified Kore.Simplify.Pattern as Pattern
-import qualified Control.Lens as Lens
-import Data.Generics.Product (HasField(field))
-import qualified Kore.Internal.Conditional as Conditional
 
 -- | Evaluates functions on an application pattern.
 
@@ -276,10 +276,11 @@ maybeEvaluatePattern
                 return (OrPattern.fromPattern unchangedPatt)
             | otherwise =
                 OrPattern.map (toSimplify *>)
-                  <$> simplifyTerm (SideCondition.top) (Conditional.term toSimplify)
-              -- return $ OrPattern.fromPattern toSimplify
-              -- Pattern.simplify toSimplify
-              -- simplifyPatternId sideCondition toSimplify
+                    <$> simplifyTerm (SideCondition.top) (Conditional.term toSimplify)
+
+-- return $ OrPattern.fromPattern toSimplify
+-- Pattern.simplify toSimplify
+-- simplifyPatternId sideCondition toSimplify
 
 evaluateSortInjection ::
     InternalVariable variable =>

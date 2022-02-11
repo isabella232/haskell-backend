@@ -13,6 +13,7 @@ module Kore.Simplify.Pattern (
 import Control.Monad (
     (>=>),
  )
+import Data.List (intercalate, intersperse)
 import qualified Kore.Internal.Conditional as Conditional
 import Kore.Internal.OrPattern (
     OrPattern,
@@ -51,10 +52,9 @@ import Kore.Simplify.Simplify (
     simplifyTerm,
  )
 import Kore.Substitute
+import Kore.Unparser (Unparse (unparse), unparseToString, unparseToText)
 import qualified Logic
 import Prelude.Kore
-import Kore.Unparser (Unparse(unparse), unparseToText, unparseToString)
-import Data.List (intercalate, intersperse)
 
 -- | Simplifies the 'Pattern' and removes the exists quantifiers at the top.
 simplifyTopConfiguration ::
